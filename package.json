@@ -1,0 +1,19 @@
+{
+  "name": "astro-baba-bot",
+  "version": "1.0.0",
+  "description": "AstroBaba Telegram bot - daily horoscope via a third-party horoscope API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["telegram", "bot", "horoscope", "astrology"],
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
