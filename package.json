@@ -1,7 +1,7 @@
 {
   "name": "astro-baba-bot",
   "version": "1.0.0",
-  "description": "AstroBaba Telegram bot - daily horoscope via a third-party horoscope API",
+  "description": "Telegram horoscope bot - zodiac sign in, Serper search + scrape, plain text out",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

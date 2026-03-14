@@ -1,6 +1,6 @@
 /**
- * Map user input (Hindi or English raashi/zodiac name) to the horoscope API sign.
- * API expects: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces
+ * Map user input (Hindi or English raashi/zodiac name) to Prokerala sign param.
+ * Prokerala expects: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces
  */
 
 const RAASHI_MAP = [
@@ -21,44 +21,26 @@ const RAASHI_MAP = [
 const normalize = (str) => (str || '').trim().toLowerCase().replace(/\s+/g, ' ');
 
 /**
- * Resolve user input to API sign.
+ * Resolve user input (Hindi or English) to Prokerala sign.
  * @param {string} input - Raashi in Hindi or English
- * @returns {{ sign: string, name: string } | null} - API sign and display name, or null if not found
+ * @returns {{ sign: string, name: string } | null} - sign for URL and display name, or null
  */
 const resolveRaashi = (input) => {
   const text = normalize(input);
   if (!text) return null;
-  for (const r of RAASHI_MAP) {
-    if (r.en.some((s) => s === text || text === s)) {
-      return { sign: r.sign, name: r.sign.charAt(0).toUpperCase() + r.sign.slice(1) };
-    }
-    if (r.hi.some((h) => text === h || text.includes(h))) {
-      return { sign: r.sign, name: r.sign.charAt(0).toUpperCase() + r.sign.slice(1) };
+  for (const row of RAASHI_MAP) {
+    const all = [...row.en, ...row.hi];
+    if (all.some((v) => v === text || (v.length >= 2 && text.startsWith(v)))) {
+      const name = row.sign.charAt(0).toUpperCase() + row.sign.slice(1);
+      return { sign: row.sign, name };
     }
   }
   return null;
 };
 
-/** Display names for sign (English) for messages */
-const SIGN_NAMES = {
-  aries: 'Aries (मेष)',
-  taurus: 'Taurus (वृषभ)',
-  gemini: 'Gemini (मिथुन)',
-  cancer: 'Cancer (कर्क)',
-  leo: 'Leo (सिंह)',
-  virgo: 'Virgo (कन्या)',
-  libra: 'Libra (तुला)',
-  scorpio: 'Scorpio (वृश्चिक)',
-  sagittarius: 'Sagittarius (धनु)',
-  capricorn: 'Capricorn (मकर)',
-  aquarius: 'Aquarius (कुम्भ)',
-  pisces: 'Pisces (मीन)',
-};
-
-const getSignName = (sign) => SIGN_NAMES[sign] || sign;
+const getSignName = (sign) => (sign ? sign.charAt(0).toUpperCase() + sign.slice(1) : '');
 
 module.exports = {
   resolveRaashi,
   getSignName,
-  RAASHI_MAP,
 };
