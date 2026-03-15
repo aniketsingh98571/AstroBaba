@@ -1,6 +1,6 @@
 # Telegram Horoscope Bot
 
-User sends **zodiac sign in Hindi or English**. The bot scrapes **Prokerala** horoscope page via Serper and replies with **plain text** in Telegram.
+User sends **zodiac sign in Hindi or English**. The bot scrapes a horoscope page via Serper and replies with **plain text** in Telegram.
 
 ## Setup
 
@@ -30,12 +30,12 @@ User sends **zodiac sign in Hindi or English**. The bot scrapes **Prokerala** ho
 
 - **/start** – Welcome and prompt for zodiac sign.
 - Send your **zodiac sign in Hindi or English** (e.g. मेष, Aries, Mesha, कन्या, Virgo, Leo, सिंह).  
-  The bot scrapes `https://www.prokerala.com/astrology/horoscope/?sign=<sign>` via [scrape.serper.dev](https://scrape.serper.dev) and replies with the plain text (truncated to Telegram’s limit if needed).
+  The bot scrapes the configured horoscope URL (with your sign as query param) via [scrape.serper.dev](https://scrape.serper.dev) and replies with the plain text (truncated to Telegram’s limit if needed).
 
 ## How it works
 
-1. User sends a zodiac sign (Hindi or English); bot maps it to Prokerala’s `sign` param (e.g. aries, leo, virgo).
-2. Bot builds URL: `https://www.prokerala.com/astrology/horoscope/?sign=aries` (and similar for other signs).
+1. User sends a zodiac sign (Hindi or English); bot maps it to the standard `sign` param (e.g. aries, leo, virgo).
+2. Bot builds the horoscope URL using `HOROSCOPE_BASE_URL` from env (e.g. `...?sign=aries` for each sign).
 3. Bot calls Serper **scrape** (`https://scrape.serper.dev`) with that URL.
 4. Bot sends the scraped plain text back in Telegram.
 

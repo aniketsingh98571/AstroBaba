@@ -1,6 +1,6 @@
 /**
- * Map user input (Hindi or English raashi/zodiac name) to Prokerala sign param.
- * Prokerala expects: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces
+ * Map user input (Hindi or English raashi/zodiac name) to standard sign param for horoscope URL.
+ * Expected values: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces
  */
 
 const RAASHI_MAP = [
@@ -21,7 +21,7 @@ const RAASHI_MAP = [
 const normalize = (str) => (str || '').trim().toLowerCase().replace(/\s+/g, ' ');
 
 /**
- * Resolve user input (Hindi or English) to Prokerala sign.
+ * Resolve user input (Hindi or English) to horoscope URL sign param.
  * @param {string} input - Raashi in Hindi or English
  * @returns {{ sign: string, name: string } | null} - sign for URL and display name, or null
  */

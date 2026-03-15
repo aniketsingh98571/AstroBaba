@@ -5,7 +5,7 @@
  */
 
 const SERPER_SCRAPE_URL = process.env.SERPER_SCRAPE_URL;
-const PROKERALA_HOROSCOPE_BASE = process.env.PROKERALA_HOROSCOPE_BASE;
+const HOROSCOPE_BASE_URL = process.env.HOROSCOPE_BASE_URL;
 
 // Lines containing these (case-insensitive) start the "junk" section we drop
 const HOROSCOPE_CUTOFF_PHRASES = [
@@ -87,13 +87,13 @@ const scrapeUrl = async (apiKey, url) => {
 };
 
 /**
- * Get horoscope from Prokerala for a zodiac sign: scrape URL, then format to horoscope-only text.
+ * Get horoscope for a zodiac sign: scrape configured URL with sign param, then format to horoscope-only text.
  * @param {string} apiKey - Serper API key
  * @param {string} sign - Zodiac sign for query param (e.g. "aries", "leo")
  * @returns {Promise<string>} Formatted horoscope content only (no links/CTAs)
  */
-const getHoroscopeFromProkerala = async (apiKey, sign) => {
-  const url = `${PROKERALA_HOROSCOPE_BASE}${encodeURIComponent(sign)}`;
+const getHoroscope = async (apiKey, sign) => {
+  const url = `${HOROSCOPE_BASE_URL}${encodeURIComponent(sign)}`;
   const raw = await scrapeUrl(apiKey, url);
   return formatHoroscopeOnly(raw);
 };
@@ -101,5 +101,5 @@ const getHoroscopeFromProkerala = async (apiKey, sign) => {
 module.exports = {
   scrapeUrl,
   formatHoroscopeOnly,
-  getHoroscopeFromProkerala,
+  getHoroscope,
 };

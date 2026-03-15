@@ -1,12 +1,12 @@
 /**
  * Telegram Horoscope Bot
- * User sends zodiac sign (Hindi or English). Bot scrapes Prokerala horoscope URL and returns plain text.
+ * User sends zodiac sign (Hindi or English). Bot scrapes horoscope URL and returns plain text.
  * Caches horoscope by date+sign; free plan: one rashi check per user per day.
  */
 
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
-const { getHoroscopeFromProkerala } = require('./serper');
+const { getHoroscope } = require('./serper');
 const { resolveRaashi, getSignName } = require('./raashi');
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -14,8 +14,8 @@ const SERPER_API_KEY = process.env.SERPER_API_KEY;
 
 const PREMIUM_CONTACT_EMAIL = process.env.PREMIUM_CONTACT_EMAIL;
 
-if (!TELEGRAM_TOKEN || !SERPER_API_KEY || !process.env.SERPER_SCRAPE_URL || !process.env.PROKERALA_HOROSCOPE_BASE || !PREMIUM_CONTACT_EMAIL) {
-  console.error('Missing env: TELEGRAM_BOT_TOKEN, SERPER_API_KEY, SERPER_SCRAPE_URL, PROKERALA_HOROSCOPE_BASE, PREMIUM_CONTACT_EMAIL');
+if (!TELEGRAM_TOKEN || !SERPER_API_KEY || !process.env.SERPER_SCRAPE_URL || !process.env.HOROSCOPE_BASE_URL || !PREMIUM_CONTACT_EMAIL) {
+  console.error('Missing env: TELEGRAM_BOT_TOKEN, SERPER_API_KEY, SERPER_SCRAPE_URL, HOROSCOPE_BASE_URL, PREMIUM_CONTACT_EMAIL');
   process.exit(1);
 }
 
@@ -97,7 +97,7 @@ bot.on('message', async (msg) => {
 
   try {
     await bot.sendMessage(chatId, `Fetching horoscope for ${getSignName(resolved.sign)}…`);
-    const plainText = await getHoroscopeFromProkerala(SERPER_API_KEY, resolved.sign);
+    const plainText = await getHoroscope(SERPER_API_KEY, resolved.sign);
     const toSend = truncateForTelegram(plainText);
     horoscopeTextCache.set(cacheKey, toSend);
     await bot.sendMessage(chatId, toSend);
@@ -111,4 +111,4 @@ bot.on('message', async (msg) => {
   }
 });
 
-console.log('Horoscope bot is running (Prokerala + Serper + Telegram).');
+console.log('Horoscope bot is running (Serper + Telegram).');
