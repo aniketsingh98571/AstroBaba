@@ -7,11 +7,8 @@
 const SERPER_SCRAPE_URL = process.env.SERPER_SCRAPE_URL;
 const HOROSCOPE_BASE_URL = process.env.HOROSCOPE_BASE_URL;
 
-// Lines containing these (case-insensitive) start the "junk" section we drop
+// Lines containing these (case-insensitive) start the footer we drop (must come AFTER all sections: Daily, Health, Love, Career & Money)
 const HOROSCOPE_CUTOFF_PHRASES = [
-  'understand compatibility',
-  'check love percentage',
-  'love calculator',
   'to unfold what lies further ahead',
   'take a look at your',
   'weekly and',
@@ -23,6 +20,13 @@ const HOROSCOPE_CUTOFF_PHRASES = [
   'horoscope for other zodiac signs',
   'back to horoscope main page',
   'related links',
+];
+
+// Lines containing these are omitted from output (e.g. promo/CTA lines between sections)
+const HOROSCOPE_SKIP_PHRASES = [
+  'understand compatibility',
+  'check love percentage',
+  'love calculator',
 ];
 
 /**
@@ -37,6 +41,17 @@ const isCutoffLine = (line) => {
 };
 
 /**
+ * Returns true if the line should be omitted (e.g. promo line) but we keep processing.
+ * @param {string} line
+ * @returns {boolean}
+ */
+const isSkipLine = (line) => {
+  const lower = line.toLowerCase().trim();
+  if (!lower) return false;
+  return HOROSCOPE_SKIP_PHRASES.some((phrase) => lower.includes(phrase));
+};
+
+/**
  * Keep only horoscope content: drop links, "read more", other signs, related links.
  * @param {string} raw - Raw text from scrape (e.g. Serper JSON .text)
  * @returns {string} Formatted horoscope only
@@ -45,11 +60,15 @@ const formatHoroscopeOnly = (raw) => {
   const text = (raw || '').trim();
   if (!text) return '';
 
-  const lines = text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+  const lines = text
+    .split(/\n+/)
+    .map((l) => l.trim())
+    .filter(Boolean);
   const kept = [];
 
   for (const line of lines) {
     if (isCutoffLine(line)) break;
+    if (isSkipLine(line)) continue;
     kept.push(line);
   }
 
@@ -83,6 +102,7 @@ const scrapeUrl = async (apiKey, url) => {
   } catch {
     // not JSON, use as-is
   }
+  console.log('body', body);
   return body;
 };
 
